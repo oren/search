@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
- <ProductList>
-	 <Product>
-     <sku>ABC123</sku>
-     <quantity>2</quantity>
-   </Product>
-   <Product>
-     <sku>ABC123</sku>
-     <quantity>2</quantity>
-   </Product>
-</ProductList>
+<rss version ="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+  <title>foo bar</title>
+  <description>foo bar</description>
+  <link>http://foobar.com</link>
+   <ProductList>
+     <Product>
+       <sku>ABC123</sku>
+       <quantity>2</quantity>
+     </Product>
+     <Product>
+       <sku>ABC123</sku>
+       <quantity>2</quantity>
+     </Product>
+  </ProductList>
+</channel>
+</rss>
