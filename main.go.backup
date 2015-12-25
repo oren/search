@@ -1,0 +1,52 @@
+package main
+
+import "os"
+
+import "encoding/json"
+import "bufio"
+import "fmt"
+import "log"
+
+var products struct {
+	ID        string `json:id`
+	Title     string `json:title`
+	Brand     string `json:brand`
+	Condition string `json:condition`
+	Price     string `json:price`
+	Avl       string `json:avl`
+}
+
+func check(e error) {
+	if e != nil {
+		log.Fatal(e)
+	}
+}
+
+func main() {
+	file, err := os.Open("products.json")
+	check(err)
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+		jsonParser := json.NewDecoder(scanner.Text())
+		if err = jsonParser.Decode(&products); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	// check(err)
+
+	// jsonParser := json.NewDecoder(productsFile)
+	// if err = jsonParser.Decode(&products); err != nil {
+	// 	panic(err)
+	// }
+
+	// fmt.Printf("%+v\n", products)
+	// return
+}
