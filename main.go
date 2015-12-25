@@ -11,7 +11,7 @@ type mytype []map[string]string
 
 func main() {
 	var data mytype
-	file, err := ioutil.ReadFile("products.json")
+	file, err := ioutil.ReadFile("products-small.json")
 	if err != nil {
 		log.Fatal(err)
 	}
