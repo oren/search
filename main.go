@@ -52,7 +52,7 @@ func search(searchTerm []string, products map[string]product, keywords map[strin
 	}
 
 	score := make(PairList, len(tmpScore))
-	score = RankByWordCount(tmpScore)
+	score = RankByValue(tmpScore)
 	// return the top 5 products
 	for index, value := range score {
 		if index == 5 {

@@ -4,10 +4,11 @@ import (
 	"sort"
 )
 
-func RankByWordCount(wordFrequencies map[int]int) PairList {
-	pl := make(PairList, len(wordFrequencies))
+// 1:3, 2:2, 4:9 -> 4:9, 1:3, 2:2
+func RankByValue(score map[int]int) PairList {
+	pl := make(PairList, len(score))
 	i := 0
-	for k, v := range wordFrequencies {
+	for k, v := range score {
 		pl[i] = Pair{k, v}
 		i++
 	}
