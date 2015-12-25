@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+   <ProductList>
+     <Product>
+       <sku>ABC123</sku>
+       <quantity>2</quantity>
+     </Product>
+     <Product>
+       <sku>ABC123</sku>
+       <quantity>2</quantity>
+     </Product>
+  </ProductList>

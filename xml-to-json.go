@@ -9,10 +9,14 @@ import (
 )
 
 type DataFormat struct {
-	ProductList []struct {
-		Sku      string `xml:"sku" json:"sku"`
-		Quantity int    `xml:"quantity" json:"quantity"`
-	} `xml:"Product" json:"products"`
+	Rss struct {
+		Channel struct {
+			ProductList []struct {
+				Sku      string `xml:"sku" json:"sku"`
+				Quantity int    `xml:"quantity" json:"quantity"`
+			} `xml:"Product" json:"products"`
+		} `xml:"ProductList" json:"ProductList"`
+	} `xml:"channel" json:"channel"`
 }
 
 func main() {
@@ -27,6 +31,8 @@ func main() {
 		fmt.Println("Error unmarshalling from XML", err)
 		return
 	}
+
+	fmt.Printf("%s\n", data)
 
 	result, err := json.Marshal(data)
 	if nil != err {
