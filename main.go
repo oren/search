@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 // slice of maps. each map hase k/v that both are strings
@@ -33,23 +34,26 @@ func main() {
 }
 
 func search(searchTerm []string, products map[string]product, keywords map[string][]int) []product {
-	score := make(map[int]int)
+	tmpScore := make(map[int]int)
+	results := []product{}
 	// for each search term
 	// find its slice
 	// for each number in the slice, increment a scoring map
 	for _, term := range searchTerm {
-		fmt.Println(keywords[term])
 		for _, productNumber := range keywords[term] {
-			fmt.Println(productNumber)
-			score[productNumber] += 1
+			tmpScore[productNumber] += 1
 		}
 	}
 
-	score2 := make(PairList, len(score))
-	score2 = RankByWordCount(score)
-	fmt.Println(score2)
+	score := make(PairList, len(tmpScore))
+	score = RankByWordCount(tmpScore)
 	// return the top 5 products
-	results := []product{products["1"], products["2"]}
+	for index, value := range score {
+		if index == 5 {
+			break
+		}
+		results = append(results, products[strconv.Itoa(value.Key)])
+	}
 
 	return results
 }
