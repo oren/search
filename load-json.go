@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 )
@@ -10,8 +9,7 @@ import (
 // slice of maps. each map hase k/v that both are strings
 type mytype []map[string]string
 
-func main() {
-
+func LoadJSON() mytype {
 	var data mytype
 	file, err := ioutil.ReadFile("products-small.json")
 	if err != nil {
@@ -22,5 +20,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(data)
+	return data
 }

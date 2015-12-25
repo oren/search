@@ -16,6 +16,15 @@ type product struct {
 
 func main() {
 	// map of string -> product
+	// products2 := make(map[string]product)
+	data := LoadJSON()
+	fmt.Println("data", data)
+
+	// for index, value := range data {
+	// 	products2[value["id"]] = value
+	// }
+
+	// map of string -> product
 	products := make(map[string]product)
 	products["1"] = product{ID: "1", Title: "usb 3.0 8GB", Price: "5.99"}
 	products["2"] = product{ID: "2", Title: "usb 3.0 4GB", Price: "3.99"}
