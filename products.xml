@@ -5,11 +5,11 @@
   <description>media markt</description>
   <link>http://tiendas.mediamarkt.es</link>
   <item>
-    <sku>ABC123</sku>
+    <id>ABC123</id>
     <quantity>2</quantity>
   </item>
   <item>
-    <sku>ABC123</sku>
+    <id>ABC123</id>
     <quantity>2</quantity>
   </item>
 </channel>
