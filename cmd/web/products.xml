@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version ="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+  <title>media markt</title>
+  <description>media markt</description>
+  <link>http://tiendas.mediamarkt.es</link>
+  <item>
+    <id>1</id>
+    <title>usb 3.0 8GB</title>
+    <price>5.99</price>
+    <description>usb stick 3.0 8GB blue</description>
+  </item>
+  <item>
+    <id>2</id>
+    <title>usb 3.0 4GB</title>
+    <price>3.99</price>
+    <description>usb stick 3.0 4GB red</description>
+  </item>
+  <item>
+    <id>3</id>
+    <title>usb 3.0 12GB</title>
+    <price>8.99</price>
+    <description>usb stick 3.0 12GB</description>
+  </item>
+  <item>
+    <id>4</id>
+    <title>Android Galaxy x</title>
+    <price>250.99</price>
+    <description>Android phone Galaxy x black</description>
+  </item>
+  <item>
+    <id>5</id>
+    <title>usb 2.0 4GB</title>
+    <price>1.99</price>
+    <description>usb stick 2.0 4GB</description>
+  </item>
+  <item>
+    <id>6</id>
+    <title>usb 2.0 12GB</title>
+    <price>7.99</price>
+    <description>usb stick 2.0 12GB</description>
+  </item>
+</channel>
+</rss>

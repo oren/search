@@ -1,4 +1,4 @@
-package main
+package search
 
 import (
 	// "encoding/json"
@@ -18,11 +18,11 @@ type DataFormat struct {
 	} `xml:"channel" json:"channel"`
 }
 
-func LoadJSON() (map[string]product, error) {
+func loadXML(file string) (map[string]Product, error) {
 	// map of string -> product
-	products := make(map[string]product)
+	products := make(map[string]Product)
 
-	xmlData, err := ioutil.ReadFile("products.xml")
+	xmlData, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func LoadJSON() (map[string]product, error) {
 	}
 
 	for _, prod := range data.Rss.Channel {
-		products[prod.Id] = product{ID: prod.Id, Title: prod.Title, Price: prod.Price, Description: prod.Description}
+		products[prod.Id] = Product{ID: prod.Id, Title: prod.Title, Price: prod.Price, Description: prod.Description}
 	}
 
 	return products, nil
