@@ -22,21 +22,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("data", products)
-
-	// for index, value := range data {
-	// 	products2[value["id"]] = value
-	// }
-
-	// map of string -> product
-	// products := make(map[string]product)
-	products["1"] = product{ID: "1", Title: "usb 3.0 8GB", Price: "5.99"}
-	products["2"] = product{ID: "2", Title: "usb 3.0 4GB", Price: "3.99"}
-	products["3"] = product{ID: "3", Title: "usb 3.0 12GB", Price: "8.99"}
-	products["4"] = product{ID: "4", Title: "usb 2.0 8GB", Price: "2.99"}
-	products["5"] = product{ID: "5", Title: "usb 2.0 4GB", Price: "1.99"}
-	products["6"] = product{ID: "6", Title: "usb 2.0 12GB", Price: "7.99"}
-
 	// map of string -> [int, int, int]
 	keywords := make(map[string][]int)
 	keywords["usb"] = []int{1, 2, 3, 4, 5, 6}

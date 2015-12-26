@@ -5,12 +5,34 @@
   <description>media markt</description>
   <link>http://tiendas.mediamarkt.es</link>
   <item>
-    <id>ABC123</id>
-    <title>2</title>
+    <id>1</id>
+    <title>usb 3.0 8GB</title>
+    <price>5.99</price>
   </item>
   <item>
-    <id>ABC123</id>
-    <title>2</title>
+    <id>2</id>
+    <title>usb 3.0 4GB</title>
+    <price>3.99</price>
+  </item>
+  <item>
+    <id>3</id>
+    <title>usb 3.0 12GB</title>
+    <price>8.99</price>
+  </item>
+  <item>
+    <id>4</id>
+    <title>usb 2.0 8GB</title>
+    <price>2.99</price>
+  </item>
+  <item>
+    <id>5</id>
+    <title>usb 2.0 4GB</title>
+    <price>1.99</price>
+  </item>
+  <item>
+    <id>6</id>
+    <title>usb 2.0 12GB</title>
+    <price>7.99</price>
   </item>
 </channel>
 </rss>
