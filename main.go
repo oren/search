@@ -21,8 +21,6 @@ func main() {
 	})
 
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("query", r.URL.Query())
-
 		query := r.URL.Query().Get("q")
 		if query != "" {
 			results := Search(query)
@@ -58,7 +56,7 @@ func Search(term string) []product {
 	// slice of strings
 	searchTerm := strings.Fields(term)
 	results := search(searchTerm, products, keywords)
-	fmt.Println(results)
+	fmt.Printf("Search: %s.\nResults: %s\n", term, results)
 	return results
 }
 
