@@ -6,11 +6,11 @@
   <link>http://tiendas.mediamarkt.es</link>
   <item>
     <id>ABC123</id>
-    <quantity>2</quantity>
+    <title>2</title>
   </item>
   <item>
     <id>ABC123</id>
-    <quantity>2</quantity>
+    <title>2</title>
   </item>
 </channel>
 </rss>
