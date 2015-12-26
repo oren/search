@@ -1,8 +1,8 @@
 # search
 
-* load xml to memory
-* implement search function
-* expose as http endpoint
+* [x] load xml to memory
+* [x] implement search function
+* [ ] expose as http endpoint
 
 ## run
 
