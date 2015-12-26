@@ -43,12 +43,10 @@ func createKeyWords(products map[string]product) map[string][]int {
 	// map of string -> [int, int, int]
 	keywords := make(map[string][]int)
 
-	// for _, product := range products {
-	// s := []string{product.Title, product.Description}
-	// s2 := strings.Join(s, " ")
-	// words := strings.Fields(s2)
-	// fmt.Println("joined slice", words)
-	// }
+	for _, product := range products {
+		words := strings.Fields(product.Title + product.Description)
+		fmt.Println("slice of all words", words)
+	}
 
 	keywords["usb"] = []int{1, 2, 3, 5, 6}
 	keywords["3.0"] = []int{1, 2, 3}
