@@ -1,24 +1,42 @@
 package main
 
 import (
-	"encoding/json"
+	// "encoding/json"
+	"encoding/xml"
+	"fmt"
 	"io/ioutil"
-	"log"
 )
 
-// slice of maps. each map hase k/v that both are strings
-type mytype []map[string]string
+type DataFormat struct {
+	Rss struct {
+		Channel []struct {
+			Sku      string `xml:"sku" json:"sku"`
+			Quantity int    `xml:"quantity" json:"quantity"`
+		} `xml:"item" json:"products"`
+	} `xml:"channel" json:"channel"`
+}
 
-func LoadJSON() mytype {
-	var data mytype
-	file, err := ioutil.ReadFile("products-small.json")
+func LoadJSON() (map[string]product, error) {
+	// map of string -> product
+	products := make(map[string]product)
+
+	xmlData, err := ioutil.ReadFile("products.xml")
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	err = json.Unmarshal(file, &data)
-	if err != nil {
-		log.Fatal(err)
+	data := &DataFormat{}
+
+	err = xml.Unmarshal(xmlData, data)
+	if nil != err {
+		fmt.Println("Error unmarshalling from XML", err)
+		return nil, err
 	}
 
-	return data
+	fmt.Println("channel", data)
+
+	for _, prod := range data.Rss.Channel {
+		products[prod.Sku] = product{ID: prod.Sku, Title: "usb 3.0 8GB", Price: "5.99"}
+	}
+
+	return products, nil
 }

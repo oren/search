@@ -1,12 +1,18 @@
 package main
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"log"
 )
+
+type product struct {
+	ID    string `json:id`
+	Title string `json:title`
+	Price string `json:price`
+}
 
 type DataFormat struct {
 	Rss struct {
@@ -32,13 +38,20 @@ func main() {
 		return
 	}
 
-	fmt.Printf("%s\n", data)
+	// map of string -> product
+	products := make(map[string]product)
 
-	result, err := json.Marshal(data)
-	if nil != err {
-		fmt.Println("Error marshalling to JSON", err)
-		return
+	for _, prod := range data.Rss.Channel.ProductList {
+		products[prod.Sku] = product{ID: prod.Sku, Title: "usb 3.0 8GB", Price: "5.99"}
 	}
 
-	fmt.Printf("%s\n", result)
+	fmt.Printf("%+v\n", products)
+
+	// result, err := json.Marshal(data)
+	// if nil != err {
+	// 	fmt.Println("Error marshalling to JSON", err)
+	// 	return
+	// }
+
+	// fmt.Printf("%s\n", result)
 }
