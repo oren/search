@@ -2,7 +2,7 @@
 
 * [x] load xml to memory
 * [x] implement search function
-* [ ] expose as http endpoint
+* [x] expose as http endpoint
 
 ## run
 
