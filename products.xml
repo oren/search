@@ -20,21 +20,25 @@
     <id>3</id>
     <title>usb 3.0 12GB</title>
     <price>8.99</price>
+    <description>usb stick 3.0 12GB</description>
   </item>
   <item>
     <id>4</id>
-    <title>usb 2.0 8GB</title>
-    <price>2.99</price>
+    <title>Android Galaxy x</title>
+    <price>250.99</price>
+    <description>Android phone Galaxy x black</description>
   </item>
   <item>
     <id>5</id>
     <title>usb 2.0 4GB</title>
     <price>1.99</price>
+    <description>usb stick 2.0 4GB</description>
   </item>
   <item>
     <id>6</id>
     <title>usb 2.0 12GB</title>
     <price>7.99</price>
+    <description>usb stick 2.0 12GB</description>
   </item>
 </channel>
 </rss>
