@@ -3,27 +3,53 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // slice of maps. each map hase k/v that both are strings
 // type mytype []map[string]string
 
 type product struct {
-	ID    string `json:id`
-	Title string `json:title`
-	Price string `json:price`
+	ID          string `json:id`
+	Title       string `json:title`
+	Price       string `json:price`
+	Description string `json:description`
 }
 
 func main() {
 	// map of string -> product
-	// products2 := make(map[string]product)
 	products, err := LoadJSON()
 	if err != nil {
 		panic(err)
 	}
 
+	keywords := createKeyWords(products)
+
+	// slice of strings
+	searchTerm := []string{"usb", "4GB", "foo"}
+	results := search(searchTerm, products, keywords)
+	fmt.Println(results)
+}
+
+func createKeyWords(products map[string]product) map[string][]int {
+	// for each product
+	// loop on all words in title and description
+	// add word to map
 	// map of string -> [int, int, int]
 	keywords := make(map[string][]int)
+
+	for _, product := range products {
+		fmt.Println("product", product)
+		// titleWords := strings.Fields(product.Title)
+		// descWords := strings.Fields(product.Description)
+
+		s := []string{product.Title, product.Description}
+		s2 := strings.Join(s, " ")
+		words := strings.Fields(s2)
+		fmt.Println("joined slice", words)
+
+	}
+
 	keywords["usb"] = []int{1, 2, 3, 4, 5, 6}
 	keywords["3.0"] = []int{1, 2, 3}
 	keywords["8GB"] = []int{1, 4}
@@ -31,10 +57,7 @@ func main() {
 	keywords["2.0"] = []int{4, 5, 6}
 	keywords["12GB"] = []int{3, 6}
 
-	// slice of strings
-	searchTerm := []string{"usb", "4GB", "foo"}
-	results := search(searchTerm, products, keywords)
-	fmt.Println(results)
+	return keywords
 }
 
 func search(searchTerm []string, products map[string]product, keywords map[string][]int) []product {

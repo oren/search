@@ -8,11 +8,13 @@
     <id>1</id>
     <title>usb 3.0 8GB</title>
     <price>5.99</price>
+    <description>usb stick 3.0 8GB blue</description>
   </item>
   <item>
     <id>2</id>
     <title>usb 3.0 4GB</title>
     <price>3.99</price>
+    <description>usb stick 3.0 4GB red</description>
   </item>
   <item>
     <id>3</id>

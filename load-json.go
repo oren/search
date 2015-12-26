@@ -10,9 +10,10 @@ import (
 type DataFormat struct {
 	Rss struct {
 		Channel []struct {
-			Id    string `xml:"id" json:"id"`
-			Title string `xml:"title" json:"title"`
-			Price string `xml:"price" json:"price"`
+			Id          string `xml:"id" json:"id"`
+			Title       string `xml:"title" json:"title"`
+			Price       string `xml:"price" json:"price"`
+			Description string `xml:"description" json:"description"`
 		} `xml:"item" json:"products"`
 	} `xml:"channel" json:"channel"`
 }
@@ -34,7 +35,7 @@ func LoadJSON() (map[string]product, error) {
 	}
 
 	for _, prod := range data.Rss.Channel {
-		products[prod.Id] = product{ID: prod.Id, Title: prod.Title, Price: prod.Price}
+		products[prod.Id] = product{ID: prod.Id, Title: prod.Title, Price: prod.Price, Description: prod.Description}
 	}
 
 	return products, nil
