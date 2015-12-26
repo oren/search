@@ -17,6 +17,10 @@ type product struct {
 }
 
 func main() {
+	Search()
+}
+
+func Search() []product {
 	// map of string -> product
 	products, err := LoadJSON()
 	if err != nil {
@@ -29,6 +33,7 @@ func main() {
 	searchTerm := []string{"usb", "4GB", "foo"}
 	results := search(searchTerm, products, keywords)
 	fmt.Println(results)
+	return results
 }
 
 func createKeyWords(products map[string]product) map[string][]int {
@@ -39,15 +44,14 @@ func createKeyWords(products map[string]product) map[string][]int {
 	keywords := make(map[string][]int)
 
 	for _, product := range products {
-		fmt.Println("product", product)
+		// fmt.Println("product", product)
 		// titleWords := strings.Fields(product.Title)
 		// descWords := strings.Fields(product.Description)
 
 		s := []string{product.Title, product.Description}
 		s2 := strings.Join(s, " ")
 		words := strings.Fields(s2)
-		fmt.Println("joined slice", words)
-
+		// fmt.Println("joined slice", words)
 	}
 
 	keywords["usb"] = []int{1, 2, 3, 4, 5, 6}
