@@ -15,6 +15,23 @@ type product struct {
 	Description string `json:description`
 }
 
+var (
+	products map[string]product
+	keywords map[string][]string
+)
+
+func init() {
+	// map of string -> product
+	var err error
+	products, err = LoadJSON()
+	if err != nil {
+		panic(err)
+	}
+
+	// map[usb:[1 2 3 5 6] stick:[1 2 3 5 6] ...
+	keywords = createKeyWords(products)
+}
+
 func main() {
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -44,15 +61,6 @@ func main() {
 }
 
 func Search(term string) []product {
-	// map of string -> product
-	products, err := LoadJSON()
-	if err != nil {
-		panic(err)
-	}
-
-	// map[usb:[1 2 3 5 6] stick:[1 2 3 5 6] ...
-	keywords := createKeyWords(products)
-
 	// slice of strings
 	searchTerm := strings.Fields(term)
 	results := search(searchTerm, products, keywords)
