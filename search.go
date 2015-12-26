@@ -3,15 +3,15 @@ package search
 import "strings"
 
 type Product struct {
-	ID          string `json:id`
+	ID          int    `json:id`
 	Title       string `json:title`
 	Price       string `json:price`
 	Description string `json:description`
 }
 
 type Products struct {
-	products map[string]Product
-	keywords map[string]map[string]struct{}
+	products map[int]Product
+	keywords map[string]map[int]struct{}
 }
 
 func New(file string) (*Products, error) {
@@ -33,31 +33,21 @@ func (p *Products) Search(term string) []Product {
 	return results
 }
 
-// is a string exist in a slice of strings?
-func contains(s []string, e string) bool {
-	for _, i := range s {
-		if i == e {
-			return true
-		}
-	}
-	return false
-}
-
-// investigate the empty struct approach
-// https://play.golang.org/p/aF-QpfRb6I
-// https: //play.golang.org/p/vRWk64JsLb
+// using empty struct as a set - https://play.golang.org/p/aF-QpfRb6I
 func (p *Products) createKeyWords() {
 	// for each product
-	// loop on all words in title and description
-	// add word to map
-	// map of string -> [int, int, int]
+	//   loop on all words in title and description
+	//   and k/v to each keyword
 
-	p.keywords = make(map[string]map[string]struct{})
+	// p.keywords is a map of strings -> map of ints
+	// "usb" -> ( 5 -> {}, 1 -> {}, 3-> {} )
+	// "4GB" -> (5 -> {}, 6 -> {})
+	p.keywords = make(map[string]map[int]struct{})
 	for _, product := range p.products {
 		words := strings.Fields(product.Title + " " + product.Description)
 		for _, word := range words {
 			if p.keywords[word] == nil {
-				p.keywords[word] = make(map[string]struct{})
+				p.keywords[word] = make(map[int]struct{})
 			}
 			p.keywords[word][product.ID] = struct{}{}
 		}
@@ -65,7 +55,7 @@ func (p *Products) createKeyWords() {
 }
 
 func (p *Products) search(searchTerm []string) []Product {
-	tmpScore := make(map[string]int)
+	tmpScore := make(map[int]int)
 	results := []Product{}
 	// for each search term
 	// find its slice

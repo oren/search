@@ -5,7 +5,7 @@ import (
 )
 
 // 1:3, 2:2, 4:9 -> 4:9, 1:3, 2:2
-func RankByValue(score map[string]int) PairList {
+func RankByValue(score map[int]int) PairList {
 	pl := make(PairList, len(score))
 	i := 0
 	for k, v := range score {
@@ -17,7 +17,7 @@ func RankByValue(score map[string]int) PairList {
 }
 
 type Pair struct {
-	Key   string
+	Key   int
 	Value int
 }
 

@@ -1,7 +1,6 @@
 package search
 
 import (
-	// "encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +9,7 @@ import (
 type DataFormat struct {
 	Rss struct {
 		Channel []struct {
-			Id          string `xml:"id" json:"id"`
+			Id          int    `xml:"id" json:"id"`
 			Title       string `xml:"title" json:"title"`
 			Price       string `xml:"price" json:"price"`
 			Description string `xml:"description" json:"description"`
@@ -18,9 +17,9 @@ type DataFormat struct {
 	} `xml:"channel" json:"channel"`
 }
 
-func loadXML(file string) (map[string]Product, error) {
+func loadXML(file string) (map[int]Product, error) {
 	// map of string -> product
-	products := make(map[string]Product)
+	products := make(map[int]Product)
 
 	xmlData, err := ioutil.ReadFile(file)
 	if err != nil {
