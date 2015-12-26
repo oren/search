@@ -2,12 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	// "strings"
+	"strings"
 )
-
-// slice of maps. each map hase k/v that both are strings
-// type mytype []map[string]string
 
 type product struct {
 	ID          string `json:id`
@@ -27,43 +23,50 @@ func Search() []product {
 		panic(err)
 	}
 
+	// map[usb:[1 2 3 5 6] stick:[1 2 3 5 6] ...
 	keywords := createKeyWords(products)
 
 	// slice of strings
 	searchTerm := []string{"usb", "4GB", "foo"}
 	results := search(searchTerm, products, keywords)
-	// fmt.Println(results)
+	fmt.Println(results)
 	return results
 }
 
-func createKeyWords(products map[string]product) map[string][]int {
+// is a string exist in a slice of strings?
+func contains(s []string, e string) bool {
+	for _, i := range s {
+		if i == e {
+			return true
+		}
+	}
+	return false
+}
+
+// investigate the empty struct approach
+// https://play.golang.org/p/aF-QpfRb6I
+// https: //play.golang.org/p/vRWk64JsLb
+func createKeyWords(products map[string]product) map[string][]string {
 	// for each product
 	// loop on all words in title and description
 	// add word to map
 	// map of string -> [int, int, int]
-	keywords := make(map[string][]int)
 
+	keywords := make(map[string][]string)
 	for _, product := range products {
-		words := strings.Fields(product.Title + product.Description)
-		fmt.Println("slice of all words", words)
+		words := strings.Fields(product.Title + " " + product.Description)
+		for _, word := range words {
+			if !contains(keywords[word], product.ID) {
+				keywords[word] = append(keywords[word], product.ID)
+			}
+		}
 	}
 
-	keywords["usb"] = []int{1, 2, 3, 5, 6}
-	keywords["3.0"] = []int{1, 2, 3}
-	keywords["8GB"] = []int{1}
-	keywords["4GB"] = []int{2, 5}
-	keywords["2.0"] = []int{5, 6}
-	keywords["12GB"] = []int{3, 6}
-	keywords["Android"] = []int{4}
-	keywords["phone"] = []int{4}
-	keywords["Galaxy"] = []int{4}
-	keywords["x"] = []int{4}
-	keywords["black"] = []int{4}
 	return keywords
 }
 
-func search(searchTerm []string, products map[string]product, keywords map[string][]int) []product {
-	tmpScore := make(map[int]int)
+func search(searchTerm []string, products map[string]product, keywords map[string][]string) []product {
+	tmpScore := make(map[string]int)
 	results := []product{}
 	// for each search term
 	// find its slice
@@ -75,14 +78,13 @@ func search(searchTerm []string, products map[string]product, keywords map[strin
 	}
 
 	score := make(PairList, len(tmpScore))
-	score = RankByValue(tmpScore)
-	fmt.Println("score", score)
+	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
 	// return the top 5 products
 	for index, value := range score {
 		if index == 5 {
 			break
 		}
-		results = append(results, products[strconv.Itoa(value.Key)])
+		results = append(results, products[value.Key])
 	}
 
 	return results
