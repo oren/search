@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -13,10 +14,15 @@ type product struct {
 }
 
 func main() {
-	Search()
+	if len(os.Args) < 2 {
+		fmt.Println("Please pass search term as a string. for example - ./search \"usb 3.0\"")
+		os.Exit(1)
+	}
+
+	Search(os.Args[1])
 }
 
-func Search() []product {
+func Search(term string) []product {
 	// map of string -> product
 	products, err := LoadJSON()
 	if err != nil {
@@ -27,7 +33,7 @@ func Search() []product {
 	keywords := createKeyWords(products)
 
 	// slice of strings
-	searchTerm := []string{"usb", "4GB", "foo"}
+	searchTerm := strings.Fields(term)
 	results := search(searchTerm, products, keywords)
 	fmt.Println(results)
 	return results

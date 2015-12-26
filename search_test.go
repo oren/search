@@ -4,7 +4,7 @@ import "testing"
 
 // products 2 and 5 must be first
 func TestSearch(t *testing.T) {
-	products := Search()
+	products := Search("usb 4GB foo")
 	if twoAndFiveFirst(products) {
 		return
 	}

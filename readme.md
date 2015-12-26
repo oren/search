@@ -8,7 +8,7 @@
 
 ```
 go build
-./search
+./search "usb 4GB foo"
 ```
 
 ## test
