@@ -7,6 +7,8 @@ type Product struct {
 	Title       string `json:title`
 	Price       string `json:price`
 	Description string `json:description`
+	Link        string `json:link`
+	Imagelink   string `json:imageLink`
 }
 
 type Products struct {
@@ -24,13 +26,6 @@ func New(file string) (*Products, error) {
 	}
 	p.createKeyWords()
 	return p, nil
-}
-
-func (p *Products) Search(term string) []Product {
-	// slice of strings
-	searchTerm := strings.Fields(term)
-	results := p.search(searchTerm)
-	return results
 }
 
 // using empty struct as a set - https://play.golang.org/p/aF-QpfRb6I
@@ -52,6 +47,13 @@ func (p *Products) createKeyWords() {
 			p.keywords[word][product.ID] = struct{}{}
 		}
 	}
+}
+
+func (p *Products) Search(term string) []Product {
+	// slice of strings
+	searchTerm := strings.Fields(term)
+	results := p.search(searchTerm)
+	return results
 }
 
 func (p *Products) search(searchTerm []string) []Product {

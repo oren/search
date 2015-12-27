@@ -23,7 +23,7 @@ func TestSearch(t *testing.T) {
 }
 
 func twoAndFiveFirst(products []Product) bool {
-	if products[0].ID == "2" && products[1].ID == "5" || products[0].ID == "5" && products[1].ID == "2" {
+	if products[0].ID == 2 && products[1].ID == 5 || products[0].ID == 5 && products[1].ID == 2 {
 		return true
 	}
 
