@@ -3,12 +3,12 @@ package search
 import "strings"
 
 type Product struct {
-	ID          int    `json:id`
-	Title       string `json:title`
-	Price       string `json:price`
-	Description string `json:description`
-	Link        string `json:link`
-	Imagelink   string `json:imageLink`
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Price       string `json:"price"`
+	Description string `json:"description"`
+	Link        string `json:"link"`
+	Imagelink   string `json:"imageLink"`
 }
 
 type Products struct {
