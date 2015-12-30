@@ -8,10 +8,11 @@ import (
 	"os"
 
 	"github.com/oren/search"
+	"github.com/oren/search/log"
 )
 
 var Products *search.Products
-var Logger *Log
+var Log *logger.Logger
 
 func init() {
 	var err error
@@ -20,7 +21,7 @@ func init() {
 		panic(err)
 	}
 
-	Logger = NewLog("search", os.Getenv("INFLUX_USER"), os.Getenv("INFLUX_PWD"))
+	Log = logger.NewLog("search", os.Getenv("INFLUX_USER"), os.Getenv("INFLUX_PWD"))
 }
 
 func main() {
@@ -31,18 +32,19 @@ func main() {
 
 	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		Logger.install()
+		Log.Install("323")
 		log.Println("install route")
 	})
 
 	http.HandleFunc("/uninstall", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		Logger.uninstall()
+		Log.Uninstall("323")
 		log.Println("uninstall route")
 	})
 
 	http.HandleFunc("/click", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		Log.Click("323", 11)
 		log.Println("click route")
 	})
 
@@ -55,6 +57,7 @@ func main() {
 			enc := json.NewEncoder(w)
 			err := enc.Encode(results)
 			log.Println("query:", query, "results:", results)
+			Log.Search("323", "8GB")
 			return
 
 			// if encoding fails we log the error
