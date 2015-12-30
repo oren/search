@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
 
 	"github.com/oren/search/log"
 	"github.com/oren/search/search"
@@ -59,24 +60,34 @@ func main() {
 	})
 
 	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: if user id was not passed, generate one and return it
+		out, err := exec.Command("uuidgen").Output()
+		if err != nil {
+			log.Println("%s", err)
+		}
+
 		w.WriteHeader(http.StatusOK)
-		Log.Install("323")
+		s := string(out[:36])
+		Log.Install(s)
 		log.Println("install route")
 	})
 
 	http.HandleFunc("/uninstall", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: pass user id if it was passed
 		w.WriteHeader(http.StatusOK)
 		Log.Uninstall("323")
 		log.Println("uninstall route")
 	})
 
 	http.HandleFunc("/click", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: pass user id and products if they were passed
 		w.WriteHeader(http.StatusOK)
 		Log.Click("323", 11)
 		log.Println("click route")
 	})
 
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
+		// TODO: pass user id, query and results if they were passed
 		query := r.URL.Query().Get("q")
 		if query != "" {
 			results := Products.Search(query)
@@ -85,7 +96,7 @@ func main() {
 			enc := json.NewEncoder(w)
 			err := enc.Encode(results)
 			log.Println("query:", query, "results:", results)
-			Log.Search("323", "8GB")
+			Log.Search("323", query)
 			return
 
 			// if encoding fails we log the error
