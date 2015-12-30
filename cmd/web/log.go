@@ -11,27 +11,30 @@ import (
 )
 
 type Log struct {
+	Database string
+	User     string
+	Password string
 }
 
-func NewLog() *Log {
+func NewLog(database, user, password string) *Log {
 	ping()
 	l := &Log{}
+	l.Database = database
+	l.User = user
+	l.Password = password
 	return l
 }
 
-func getClient() *client.Client {
-	fmt.Println("here")
+func (l *Log) getClient() *client.Client {
 	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("there")
-
 	conf := client.Config{
 		URL:      *host,
-		Username: os.Getenv("INFLUX_USER"),
-		Password: os.Getenv("INFLUX_PWD"),
+		Username: l.User,
+		Password: l.Password,
 	}
 
 	con, err := client.NewClient(conf)
@@ -42,6 +45,7 @@ func getClient() *client.Client {
 	return con
 }
 
+// TODO: try 10 times before quit
 func ping() {
 	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
 	if err != nil {
@@ -59,9 +63,17 @@ func ping() {
 	log.Printf("Ping! %v, %s", dur, ver)
 }
 
-func (l *Log) Install() {
-	con := getClient()
+func (l *Log) install() {
+	con := l.getClient()
+	bps := l.getBatchPoints()
 
+	_, err := con.Write(bps)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (l *Log) getBatchPoints() client.BatchPoints {
 	var (
 		sampleSize = 1
 		pts        = make([]client.Point, sampleSize)
@@ -78,31 +90,15 @@ func (l *Log) Install() {
 
 	bps := client.BatchPoints{
 		Points:          pts,
-		Database:        "search",
+		Database:        l.Database,
 		RetentionPolicy: "default",
 	}
-	_, err := con.Write(bps)
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	return bps
 }
 
-func Uninstall() {
-	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	conf := client.Config{
-		URL:      *host,
-		Username: os.Getenv("INFLUX_USER"),
-		Password: os.Getenv("INFLUX_PWD"),
-	}
-
-	con, err := client.NewClient(conf)
-	if err != nil {
-		log.Fatal(err)
-	}
+func (l *Log) uninstall() {
+	con := l.getClient()
 
 	var (
 		sampleSize = 1
@@ -123,7 +119,7 @@ func Uninstall() {
 		Database:        "search",
 		RetentionPolicy: "default",
 	}
-	_, err = con.Write(bps)
+	_, err := con.Write(bps)
 	if err != nil {
 		log.Fatal(err)
 	}

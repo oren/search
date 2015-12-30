@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/oren/search"
 )
@@ -19,7 +20,7 @@ func init() {
 		panic(err)
 	}
 
-	Logger = NewLog()
+	Logger = NewLog("search", os.Getenv("INFLUX_USER"), os.Getenv("INFLUX_PWD"))
 }
 
 func main() {
@@ -30,12 +31,13 @@ func main() {
 
 	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		Logger.Install()
+		Logger.install()
 		log.Println("install route")
 	})
 
 	http.HandleFunc("/uninstall", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		Logger.uninstall()
 		log.Println("uninstall route")
 	})
 
