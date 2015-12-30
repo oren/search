@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/oren/search"
 	"github.com/oren/search/log"
+	"github.com/oren/search/search"
 )
 
 var Products *search.Products
