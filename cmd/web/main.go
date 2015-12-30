@@ -21,8 +21,8 @@ var (
 )
 
 type AppConfig struct {
-	InfluxDB *SearchConfig
-	Search   *SearchConfig
+	InfluxDB SearchConfig
+	Search   SearchConfig
 }
 
 type SearchConfig struct {
