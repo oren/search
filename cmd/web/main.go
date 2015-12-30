@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,12 +13,39 @@ import (
 	"github.com/oren/search/search"
 )
 
-var Products *search.Products
-var Log *logger.Logger
+var (
+	ConfigFile = flag.String("config", "config.json", "Config file to load")
+	Config     AppConfig
+	Products   *search.Products
+	Log        *logger.Logger
+)
+
+type AppConfig struct {
+	InfluxDB *SearchConfig
+	Search   *SearchConfig
+}
+
+type SearchConfig struct {
+	XMLFile string
+}
+
+type InfluxDBConfig struct {
+	InfluxUser     string
+	InfluxPassword string
+}
 
 func init() {
-	var err error
-	Products, err = search.New("products.xml")
+	flag.Parse()
+	ConfigBytes, err := ioutil.ReadFile(*ConfigFile)
+	if err != nil {
+		log.Fatalf("Error reading config file %s\n", err)
+	}
+	err = json.Unmarshal(ConfigBytes, &Config)
+	if err != nil {
+		log.Fatalf("Error parsing config file %s\n", err)
+	}
+
+	Products, err = search.New(Config.Search)
 	if err != nil {
 		panic(err)
 	}
@@ -25,6 +54,7 @@ func init() {
 }
 
 func main() {
+
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintln(w, "ok")

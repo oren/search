@@ -1,0 +1,9 @@
+{
+  "InfluxDB": {
+    "InfluxUser": "jim",
+    "InfluxPassword": "morrison"
+  },
+    "Search" : {
+    "XMLFile": "products.xml"
+    }
+}

@@ -16,8 +16,8 @@ type Products struct {
 	keywords map[string]map[int]struct{}
 }
 
-func New(file string) (*Products, error) {
-	products, err := loadXML(file)
+func New(config *SearchConfig) (*Products, error) {
+	products, err := loadXML(config.XMLFile)
 	if err != nil {
 		return nil, err
 	}
