@@ -10,6 +10,7 @@ import (
 )
 
 var Products *search.Products
+var Logger *Log
 
 func init() {
 	var err error
@@ -17,6 +18,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	Logger = NewLog()
 }
 
 func main() {
@@ -27,6 +30,7 @@ func main() {
 
 	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		Logger.Install()
 		log.Println("install route")
 	})
 
