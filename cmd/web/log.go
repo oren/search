@@ -14,15 +14,19 @@ type Log struct {
 }
 
 func NewLog() *Log {
+	ping()
 	l := &Log{}
 	return l
 }
 
-func connect() *client.Client {
+func getClient() *client.Client {
+	fmt.Println("here")
 	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("there")
 
 	conf := client.Config{
 		URL:      *host,
@@ -38,8 +42,25 @@ func connect() *client.Client {
 	return con
 }
 
+func ping() {
+	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
+	if err != nil {
+		log.Fatal(err)
+	}
+	con, err := client.NewClient(client.Config{URL: *host})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dur, ver, err := con.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Ping! %v, %s", dur, ver)
+}
+
 func (l *Log) Install() {
-	con := connect()
+	con := getClient()
 
 	var (
 		sampleSize = 1
