@@ -1,7 +1,8 @@
 {
   "InfluxDB": {
-    "InfluxUser": "jim",
-    "InfluxPassword": "morrison"
+    "User": "jim",
+    "Password": "morrison",
+    "DatabaseName": "search"
   },
     "Search" : {
     "XMLFile": "products.xml"

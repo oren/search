@@ -2,6 +2,10 @@ package search
 
 import "strings"
 
+type SearchConfig struct {
+	XMLFile string
+}
+
 type Product struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title"`
@@ -16,11 +20,12 @@ type Products struct {
 	keywords map[string]map[int]struct{}
 }
 
-func New(config *SearchConfig) (*Products, error) {
+func New(config SearchConfig) (*Products, error) {
 	products, err := loadXML(config.XMLFile)
 	if err != nil {
 		return nil, err
 	}
+
 	p := &Products{
 		products: products,
 	}

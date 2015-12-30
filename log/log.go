@@ -9,19 +9,30 @@ import (
 	"github.com/influxdb/influxdb/client"
 )
 
+type InfluxDBConfig struct {
+	User         string
+	Password     string
+	DatabaseName string
+}
+
 type Logger struct {
 	Database string
 	User     string
 	Password string
 }
 
-func NewLog(database, user, password string) *Logger {
-	ping()
+func NewLog(config InfluxDBConfig) (*Logger, error) {
+	err := ping()
+	if err != nil {
+		return nil, err
+	}
+
 	l := &Logger{}
-	l.Database = database
-	l.User = user
-	l.Password = password
-	return l
+	l.Database = config.DatabaseName
+	l.User = config.User
+	l.Password = config.Password
+
+	return l, nil
 }
 
 func (l *Logger) getClient() *client.Client {
@@ -45,21 +56,23 @@ func (l *Logger) getClient() *client.Client {
 }
 
 // TODO: try 10 times before quit
-func ping() {
+func ping() error {
 	host, err := url.Parse(fmt.Sprintf("http://%s:%d", "localhost", 8086))
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	con, err := client.NewClient(client.Config{URL: *host})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	dur, ver, err := con.Ping()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	log.Printf("Ping! %v, %s", dur, ver)
+
+	log.Printf("Connected to InfluxDB %v, %s", dur, ver)
+	return nil
 }
 
 func (l *Logger) Install(userID string) {

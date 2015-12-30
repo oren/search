@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/oren/search/log"
 	"github.com/oren/search/search"
@@ -21,28 +20,24 @@ var (
 )
 
 type AppConfig struct {
-	InfluxDB SearchConfig
-	Search   SearchConfig
+	InfluxDB logger.InfluxDBConfig
+	Search   search.SearchConfig
 }
 
-type SearchConfig struct {
-	XMLFile string
-}
-
-type InfluxDBConfig struct {
-	InfluxUser     string
-	InfluxPassword string
-}
-
+// panic only doring init!
 func init() {
 	flag.Parse()
+
 	ConfigBytes, err := ioutil.ReadFile(*ConfigFile)
 	if err != nil {
-		log.Fatalf("Error reading config file %s\n", err)
+		panic(err)
 	}
 	err = json.Unmarshal(ConfigBytes, &Config)
 	if err != nil {
-		log.Fatalf("Error parsing config file %s\n", err)
+		panic(err)
+		// TODO: add line numbers to log so i can use log.fatal
+		// https://golang.org/pkg/log/#pkg-examples
+		// logger := log.New(os.Stderr, "OH NO AN ERROR", log.Llongfile)
 	}
 
 	Products, err = search.New(Config.Search)
@@ -50,7 +45,10 @@ func init() {
 		panic(err)
 	}
 
-	Log = logger.NewLog("search", os.Getenv("INFLUX_USER"), os.Getenv("INFLUX_PWD"))
+	Log, err = logger.NewLog(Config.InfluxDB)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
