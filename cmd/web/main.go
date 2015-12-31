@@ -102,15 +102,9 @@ func searchFunc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	type output struct {
-		Products []search.Product `json:"products"`
-		UserID   string           `json:"userID"`
-	}
-
-	var ret output
-
 	results := Products.Search(query)
 
+	var user string
 	userID := r.URL.Query().Get("id")
 	if userID == "" {
 		out, err := exec.Command("uuidgen").Output()
@@ -118,18 +112,17 @@ func searchFunc(w http.ResponseWriter, r *http.Request) {
 			log.Println("%s", err)
 		}
 
-		user := string(out[:36])
-
-		ret = output{
-			Products: results,
-			UserID:   user,
-		}
+		user = string(out[:36])
 	}
 
-	if userID != "" {
-		ret = output{
-			Products: results,
-		}
+	type output struct {
+		Products []search.Product `json:"products"`
+		UserID   string           `json:"userID,omitempty"`
+	}
+
+	ret := output{
+		Products: results,
+		UserID:   user,
 	}
 
 	w.Header().Add("Content-Type", "application/json")
