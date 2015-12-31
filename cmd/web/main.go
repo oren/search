@@ -61,14 +61,19 @@ func main() {
 
 	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: if user id was not passed, generate one and return it
-		out, err := exec.Command("uuidgen").Output()
-		if err != nil {
-			log.Println("%s", err)
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			out, err := exec.Command("uuidgen").Output()
+			if err != nil {
+				log.Println("%s", err)
+			}
+			id = string(out[:36])
 		}
 
 		w.WriteHeader(http.StatusOK)
-		s := string(out[:36])
-		Log.Install(s)
+		fmt.Fprintln(w, id)
+
+		Log.Install(id)
 		log.Println("install route")
 	})
 
@@ -97,17 +102,18 @@ func main() {
 			err := enc.Encode(results)
 			log.Println("query:", query, "results:", results)
 			Log.Search("323", query)
-			return
 
 			// if encoding fails we log the error
 			if err != nil {
 				fmt.Errorf("encode response: %v", err)
 			}
+			return
 		}
 
 		http.Error(w, "bad request", http.StatusBadRequest)
 	})
 
+	log.Println("server listening")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 	// Search(os.Args[1])
 }
