@@ -93,6 +93,9 @@ func main() {
 
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: pass user id, query and results if they were passed
+		userID := r.URL.Query()
+		log.Println("id:%s", userID)
+
 		query := r.URL.Query().Get("q")
 		if query != "" {
 			results := Products.Search(query)
