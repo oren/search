@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
+	"strconv"
 
 	"github.com/oren/search/log"
 	"github.com/oren/search/search"
@@ -25,20 +26,16 @@ type AppConfig struct {
 	Search   search.SearchConfig
 }
 
-// panic only doring init!
 func init() {
 	flag.Parse()
 
 	ConfigBytes, err := ioutil.ReadFile(*ConfigFile)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	err = json.Unmarshal(ConfigBytes, &Config)
 	if err != nil {
-		panic(err)
-		// TODO: add line numbers to log so i can use log.fatal
-		// https://golang.org/pkg/log/#pkg-examples
-		// logger := log.New(os.Stderr, "OH NO AN ERROR", log.Llongfile)
+		log.Fatal(err)
 	}
 
 	Products, err = search.New(Config.Search)
@@ -48,75 +45,129 @@ func init() {
 
 	Log, err = logger.NewLog(Config.InfluxDB)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
 func main() {
-
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, "ok")
-	})
-
-	http.HandleFunc("/install", func(w http.ResponseWriter, r *http.Request) {
-		// TODO: if user id was not passed, generate one and return it
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			out, err := exec.Command("uuidgen").Output()
-			if err != nil {
-				log.Println("%s", err)
-			}
-			id = string(out[:36])
-		}
-
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, id)
-
-		Log.Install(id)
-		log.Println("install route")
-	})
-
-	http.HandleFunc("/uninstall", func(w http.ResponseWriter, r *http.Request) {
-		// TODO: pass user id if it was passed
-		w.WriteHeader(http.StatusOK)
-		Log.Uninstall("323")
-		log.Println("uninstall route")
-	})
-
-	http.HandleFunc("/click", func(w http.ResponseWriter, r *http.Request) {
-		// TODO: pass user id and products if they were passed
-		w.WriteHeader(http.StatusOK)
-		Log.Click("323", 11)
-		log.Println("click route")
-	})
-
-	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
-		// TODO: pass user id, query and results if they were passed
-		userID := r.URL.Query()
-		log.Println("id:%s", userID)
-
-		query := r.URL.Query().Get("q")
-		if query != "" {
-			results := Products.Search(query)
-			w.Header().Add("Content-Type", "application/json")
-			// encode it as JSON on the response
-			enc := json.NewEncoder(w)
-			err := enc.Encode(results)
-			log.Println("query:", query, "results:", results)
-			Log.Search("323", query)
-
-			// if encoding fails we log the error
-			if err != nil {
-				fmt.Errorf("encode response: %v", err)
-			}
-			return
-		}
-
-		http.Error(w, "bad request", http.StatusBadRequest)
-	})
+	http.HandleFunc("/health", health)
+	http.HandleFunc("/install", install)
+	http.HandleFunc("/uninstall", uninstall)
+	http.HandleFunc("/search", searchFunc)
+	http.HandleFunc("/click", click)
 
 	log.Println("server listening")
 	log.Fatal(http.ListenAndServe(":3000", nil))
-	// Search(os.Args[1])
+}
+
+func health(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "ok")
+}
+
+func install(w http.ResponseWriter, r *http.Request) {
+	userID := r.URL.Query().Get("id")
+	if userID == "" {
+		out, err := exec.Command("uuidgen").Output()
+		if err != nil {
+			log.Println("%s", err)
+		}
+		userID = string(out[:36])
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, userID)
+
+	Log.Install(userID)
+	log.Println("install route")
+}
+
+func uninstall(w http.ResponseWriter, r *http.Request) {
+	userID := r.URL.Query().Get("id")
+	if userID == "" {
+		userID = "0"
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	Log.Uninstall(userID)
+	log.Println("uninstall route")
+}
+
+// generate user id and return it if it was not passed in querystring
+func searchFunc(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+
+	type output struct {
+		Products []search.Product `json:"products"`
+		UserID   string           `json:"userID"`
+	}
+
+	var ret output
+
+	results := Products.Search(query)
+
+	userID := r.URL.Query().Get("id")
+	if userID == "" {
+		out, err := exec.Command("uuidgen").Output()
+		if err != nil {
+			log.Println("%s", err)
+		}
+
+		user := string(out[:36])
+
+		ret = output{
+			Products: results,
+			UserID:   user,
+		}
+	}
+
+	if userID != "" {
+		ret = output{
+			Products: results,
+		}
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	// encode it as JSON on the response
+	enc := json.NewEncoder(w)
+	err := enc.Encode(ret)
+
+	if err != nil {
+		log.Println("encode response: %v", err)
+	}
+
+	log.Println("query:", query, "results:", ret)
+	Log.Search(userID, query)
+}
+
+func click(w http.ResponseWriter, r *http.Request) {
+	productStr := r.URL.Query().Get("pid")
+	if productStr == "" {
+		http.Error(w, "bad request", http.StatusBadRequest)
+	}
+
+	productID, err := strconv.Atoi(productStr)
+	if err != nil {
+		log.Println(err)
+		productID = 0
+	}
+
+	userID := r.URL.Query().Get("id")
+	if userID == "" {
+		out, err := exec.Command("uuidgen").Output()
+		if err != nil {
+			log.Println("%s", err)
+		}
+		userID = string(out[:36])
+		fmt.Fprintln(w, userID)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	Log.Click(userID, productID)
+	log.Println("click route")
 }
