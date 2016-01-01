@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"time"
 
 	"github.com/influxdb/influxdb/client"
 )
@@ -128,7 +127,6 @@ func (l *Logger) getBatchPoints(measurement string, fields map[string]interface{
 	pts[0] = client.Point{
 		Measurement: measurement,
 		Fields:      fields,
-		Time:        time.Now(),
 		Precision:   "s",
 	}
 
