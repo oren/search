@@ -100,6 +100,22 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 	log.Println("uninstall route")
 }
 
+func getUser(id string) string {
+	// var user string
+	// userID := r.URL.Query().Get("id")
+	if id != "" {
+		return ""
+	}
+
+	out, err := exec.Command("uuidgen").Output()
+	if err != nil {
+		log.Println("%s", err)
+		return ""
+	}
+
+	return string(out[:36])
+}
+
 // generate user id and return it if it was not passed in querystring
 func searchFunc(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q")
@@ -109,39 +125,32 @@ func searchFunc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	results := Products.Search(query)
-
-	var user string
-	userID := r.URL.Query().Get("id")
-	if userID == "" {
-		out, err := exec.Command("uuidgen").Output()
-		if err != nil {
-			log.Println("%s", err)
-		}
-
-		user = string(out[:36])
-	}
-
-	type output struct {
+	// we don't want to return the user id in the response
+	user := getUser(r.URL.Query().Get("id"))
+	output := struct {
 		Products []search.Product `json:"products"`
 		UserID   string           `json:"userID,omitempty"`
-	}
-
-	ret := output{
-		Products: results,
-		UserID:   user,
+	}{
+		results,
+		user,
 	}
 
 	w.Header().Add("Content-Type", "application/json")
 	// encode it as JSON on the response
 	enc := json.NewEncoder(w)
-	err := enc.Encode(ret)
+	err := enc.Encode(output)
 
 	if err != nil {
 		log.Println("encode response: %v", err)
 	}
 
-	log.Println("query:", query, "results:", ret)
-	Log.Search(userID, query)
+	// user is empty if it exist in querystring
+	if user == "" {
+		user = r.URL.Query().Get("id")
+	}
+
+	log.Println("query:", query, "results:", output)
+	Log.Search(user, query)
 }
 
 func click(w http.ResponseWriter, r *http.Request) {
