@@ -75,10 +75,11 @@ func ping() error {
 	return nil
 }
 
-func (l *Logger) Install(userID string) {
+func (l *Logger) Install(userID, reason string) {
 	measurement := "install"
 	fields := map[string]interface{}{
-		"user": userID,
+		"user":   userID,
+		"reason": reason,
 	}
 	l.log(measurement, fields)
 }

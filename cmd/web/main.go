@@ -75,10 +75,12 @@ func install(w http.ResponseWriter, r *http.Request) {
 		userID = string(out[:36])
 	}
 
+	reason := r.URL.Query().Get("reason")
+
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, userID)
 
-	Log.Install(userID)
+	Log.Install(userID, reason)
 	log.Println("install route")
 }
 
@@ -90,7 +92,11 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
-	Log.Uninstall(userID)
+	logStr := r.URL.Query().Get("log")
+	if logStr == "true" {
+		Log.Uninstall(userID)
+	}
+
 	log.Println("uninstall route")
 }
 
