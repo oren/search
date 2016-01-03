@@ -157,6 +157,7 @@ func click(w http.ResponseWriter, r *http.Request) {
 	productStr := r.URL.Query().Get("pid")
 	if productStr == "" {
 		http.Error(w, "bad request", http.StatusBadRequest)
+		return
 	}
 
 	productID, err := strconv.Atoi(productStr)
