@@ -75,9 +75,9 @@ func (p *Products) search(searchTerm []string) []Product {
 
 	score := make(PairList, len(tmpScore))
 	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
-	// return the top 5 products
+	// return the top 10 products
 	for index, value := range score {
-		if index == 5 {
+		if index == 10 {
 			break
 		}
 		results = append(results, p.products[value.Key])

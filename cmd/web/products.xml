@@ -40,5 +40,11 @@
     <price>7.99</price>
     <description>usb stick 2.0 12GB</description>
   </item>
+  <item>
+    <id>7</id>
+    <title>usb 2.0 20GB</title>
+    <price>11.99</price>
+    <description>usb stick 2.0 20GB</description>
+  </item>
 </channel>
 </rss>
