@@ -2,3 +2,4 @@ tags
 cmd/cli/cli
 cmd/web/web
 cmd/web/config.json
+cmd/cli/config.json

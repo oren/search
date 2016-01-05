@@ -1,6 +1,9 @@
 package search
 
-import "strings"
+import (
+	"path/filepath"
+	"strings"
+)
 
 type SearchConfig struct {
 	XMLFile string
@@ -44,14 +47,24 @@ func (p *Products) createKeyWords() {
 	// "4GB" -> (5 -> {}, 6 -> {})
 	p.keywords = make(map[string]map[int]struct{})
 	for _, product := range p.products {
-		words := strings.Fields(product.Title + " " + product.Description)
-		for _, word := range words {
-			if p.keywords[word] == nil {
-				p.keywords[word] = make(map[int]struct{})
+		if validImageLink(product.Imagelink) {
+			words := strings.Fields(product.Title + " " + product.Description)
+			for _, word := range words {
+				if p.keywords[word] == nil {
+					p.keywords[word] = make(map[int]struct{})
+				}
+				p.keywords[word][product.ID] = struct{}{}
 			}
-			p.keywords[word][product.ID] = struct{}{}
 		}
 	}
+}
+
+func validImageLink(link string) bool {
+	if filepath.Ext(link) == ".jpg" || filepath.Ext(link) == ".png" {
+		return true
+	}
+
+	return false
 }
 
 func (p *Products) Search(term string) []Product {
