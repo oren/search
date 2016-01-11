@@ -1,6 +1,7 @@
 package search
 
 import (
+	"log"
 	"path/filepath"
 	"strings"
 )
@@ -74,6 +75,13 @@ func (p *Products) Search(term string) []Product {
 	return results
 }
 
+func (p *Products) VerboseSearch(term string) []Product {
+	// slice of strings
+	searchTerm := strings.Fields(term)
+	results := p.verboseSearch(searchTerm)
+	return results
+}
+
 func (p *Products) search(searchTerm []string) []Product {
 	tmpScore := make(map[int]int)
 	results := []Product{}
@@ -86,13 +94,41 @@ func (p *Products) search(searchTerm []string) []Product {
 		}
 	}
 
+	log.Println("number of products", len(tmpScore))
+
 	score := make(PairList, len(tmpScore))
 	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
+
 	// return the top 10 products
 	for index, value := range score {
 		if index == 10 {
 			break
 		}
+		results = append(results, p.products[value.Key])
+	}
+
+	return results
+}
+
+func (p *Products) verboseSearch(searchTerm []string) []Product {
+	tmpScore := make(map[int]int)
+	results := []Product{}
+	// for each search term
+	// find its slice
+	// for each number in the slice, increment a scoring map
+	for _, term := range searchTerm {
+		for productNumber := range p.keywords[term] {
+			tmpScore[productNumber] += 1
+		}
+	}
+
+	log.Println("number of products", len(tmpScore))
+
+	score := make(PairList, len(tmpScore))
+	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
+
+	// return the top 10 products
+	for _, value := range score {
 		results = append(results, p.products[value.Key])
 	}
 
