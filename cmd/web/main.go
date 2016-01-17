@@ -45,7 +45,7 @@ func init() {
 
 	Log, err = logger.NewLog(Config.InfluxDB)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error with the logger: ", err)
 	}
 }
 
