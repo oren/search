@@ -49,7 +49,7 @@ func (p *Products) createKeyWords() {
 	p.keywords = make(map[string]map[int]struct{})
 	for _, product := range p.products {
 		if validImageLink(product.Imagelink) {
-			words := strings.Fields(product.Title + " " + product.Description)
+			words := strings.Fields(product.Title)
 			for _, word := range words {
 				if p.keywords[word] == nil {
 					p.keywords[word] = make(map[int]struct{})
