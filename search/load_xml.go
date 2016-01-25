@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 type DataFormat struct {
@@ -38,7 +39,7 @@ func loadXML(file string) (map[int]Product, error) {
 	for _, prod := range data.Rss.Channel {
 		products[prod.Id] = Product{
 			ID:          prod.Id,
-			Title:       prod.Title,
+			Title:       strings.ToLower(prod.Title),
 			Price:       prod.Price,
 			Description: prod.Description,
 			Link:        prod.Link,

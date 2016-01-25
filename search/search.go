@@ -41,7 +41,7 @@ func New(config SearchConfig) (*Products, error) {
 // using empty struct as a set - https://play.golang.org/p/aF-QpfRb6I
 func (p *Products) createKeyWords() {
 	// for each product
-	//   loop on all words in title and description
+	//   loop on all words in title
 	//   and k/v to each keyword
 
 	// p.keywords is a map of strings -> map of ints
@@ -99,10 +99,8 @@ func (p *Products) search(searchTerm []string) []Product {
 			break
 		}
 
-		// search.go:102: cannot assign to p.products[value.Key].Title
-		// p.products[value.Key].Title = "test"
-
 		results = append(results, p.products[value.Key])
+		results[index].Rank = value.Value
 	}
 
 	return results
