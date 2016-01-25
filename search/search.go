@@ -92,6 +92,7 @@ func (p *Products) search(searchTerm []string) []Product {
 
 	score := make(PairList, len(tmpScore))
 	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
+	highRank := isHighRank(score)
 
 	// return the top 10 products
 	for index, value := range score {
@@ -99,9 +100,22 @@ func (p *Products) search(searchTerm []string) []Product {
 			break
 		}
 
-		results = append(results, p.products[value.Key])
-		results[index].Rank = value.Value
+		// append if no high rank or if current rank > 1
+		if !highRank || value.Value > 1 {
+			results = append(results, p.products[value.Key])
+			results[index].Rank = value.Value
+		}
 	}
 
 	return results
+}
+
+func isHighRank(score PairList) bool {
+	for _, s := range score {
+		if s.Value > 1 {
+			return true
+		}
+	}
+
+	return false
 }
