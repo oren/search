@@ -9,42 +9,49 @@
     <title>usb 3.0 8GB</title>
     <price>5.99</price>
     <description>usb stick 3.0 8GB blue</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>2</id>
     <title>usb 3.0 4GB</title>
     <price>3.99</price>
     <description>usb stick 3.0 4GB red</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>3</id>
     <title>usb 3.0 12GB</title>
     <price>8.99</price>
     <description>usb stick 3.0 12GB</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>4</id>
     <title>Android Galaxy x</title>
     <price>250.99</price>
     <description>Android phone Galaxy x black</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>5</id>
     <title>usb 2.0 4GB</title>
     <price>1.99</price>
     <description>usb stick 2.0 4GB</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>6</id>
     <title>usb 2.0 12GB</title>
     <price>7.99</price>
     <description>usb stick 2.0 12GB</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
   <item>
     <id>7</id>
     <title>usb 2.0 20GB</title>
     <price>11.99</price>
     <description>usb stick 2.0 20GB</description>
+    <image_link>https://foobar.com/cat.png</image_link>
   </item>
 </channel>
 </rss>
