@@ -17,6 +17,7 @@ type Product struct {
 	Description string `json:"description"`
 	Link        string `json:"link"`
 	Imagelink   string `json:"imageLink"`
+	Rank        int    `json:"rank"`
 }
 
 type Products struct {
@@ -70,15 +71,8 @@ func validImageLink(link string) bool {
 
 func (p *Products) Search(term string) []Product {
 	// slice of strings
-	searchTerm := strings.Fields(term)
+	searchTerm := strings.Fields(strings.ToLower(term))
 	results := p.search(searchTerm)
-	return results
-}
-
-func (p *Products) VerboseSearch(term string) []Product {
-	// slice of strings
-	searchTerm := strings.Fields(term)
-	results := p.verboseSearch(searchTerm)
 	return results
 }
 
@@ -104,31 +98,10 @@ func (p *Products) search(searchTerm []string) []Product {
 		if index == 10 {
 			break
 		}
-		results = append(results, p.products[value.Key])
-	}
 
-	return results
-}
+		// search.go:102: cannot assign to p.products[value.Key].Title
+		// p.products[value.Key].Title = "test"
 
-func (p *Products) verboseSearch(searchTerm []string) []Product {
-	tmpScore := make(map[int]int)
-	results := []Product{}
-	// for each search term
-	// find its slice
-	// for each number in the slice, increment a scoring map
-	for _, term := range searchTerm {
-		for productNumber := range p.keywords[term] {
-			tmpScore[productNumber] += 1
-		}
-	}
-
-	log.Println("number of products", len(tmpScore))
-
-	score := make(PairList, len(tmpScore))
-	score = RankByValue(tmpScore) // [{2 2} {5 2} {1 1} {3 1} {6 1}]
-
-	// return the top 10 products
-	for _, value := range score {
 		results = append(results, p.products[value.Key])
 	}
 

@@ -54,7 +54,6 @@ func main() {
 	http.HandleFunc("/install", install)
 	http.HandleFunc("/uninstall", uninstall)
 	http.HandleFunc("/search", searchFunc)
-	http.HandleFunc("/verbose-search", verboseSearch)
 	http.HandleFunc("/click", click)
 
 	log.Println("server listening")
@@ -126,43 +125,6 @@ func searchFunc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	results := Products.Search(query)
-	// we don't want to return the user id in the response
-	user := getUser(r.URL.Query().Get("id"))
-	output := struct {
-		Products []search.Product `json:"products"`
-		UserID   string           `json:"userID,omitempty"`
-	}{
-		results,
-		user,
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	// encode it as JSON on the response
-	enc := json.NewEncoder(w)
-	err := enc.Encode(output)
-
-	if err != nil {
-		log.Println("encode response: %v", err)
-	}
-
-	// user is empty if it exist in querystring
-	if user == "" {
-		user = r.URL.Query().Get("id")
-	}
-
-	log.Println("query:", query, "results:", output)
-	Log.Search(user, query)
-}
-
-// generate user id and return it if it was not passed in querystring
-func verboseSearch(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query().Get("q")
-	if query == "" {
-		http.Error(w, "bad request", http.StatusBadRequest)
-		return
-	}
-
-	results := Products.VerboseSearch(query)
 	// we don't want to return the user id in the response
 	user := getUser(r.URL.Query().Get("id"))
 	output := struct {
