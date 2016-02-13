@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/url"
 
-	"github.com/influxdb/influxdb/client"
+	"github.com/influxdata/influxdb/client"
 )
 
 type InfluxDBConfig struct {
