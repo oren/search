@@ -18,7 +18,6 @@ var (
 	ConfigFile = flag.String("config", "config.json", "Config file to load")
 	Config     AppConfig
 	Products   *search.Products
-	Log        *logger.Logger
 )
 
 type AppConfig struct {
@@ -41,11 +40,6 @@ func init() {
 	Products, err = search.New(Config.Search)
 	if err != nil {
 		panic(err)
-	}
-
-	Log, err = logger.NewLog(Config.InfluxDB)
-	if err != nil {
-		log.Fatal("Error with the logger: ", err)
 	}
 }
 
@@ -80,7 +74,7 @@ func install(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, userID)
 
-	Log.Install(userID, reason)
+	log.Println("reason", reason)
 	log.Println("install route")
 }
 
@@ -91,11 +85,6 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-
-	logStr := r.URL.Query().Get("log")
-	if logStr == "true" {
-		Log.Uninstall(userID)
-	}
 
 	log.Println("uninstall route")
 }
@@ -150,7 +139,6 @@ func searchFunc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("query:", query, "results:", output)
-	Log.Search(user, query)
 }
 
 func click(w http.ResponseWriter, r *http.Request) {
@@ -177,6 +165,7 @@ func click(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	Log.Click(userID, productID)
+
+	log.Println("productID", productID)
 	log.Println("click route")
 }
